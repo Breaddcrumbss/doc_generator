@@ -1,0 +1,25 @@
+{% extends 'app/base.html' %}
+
+{% block title %}{% endblock title %}
+
+{% block body %}
+
+    <table>
+    {% for template in templates %}
+        <tr>
+            <td>
+                {{ template.pk }}
+                {{ template.name }}
+            </td>
+            <td>
+                <a href='{% url 'app:delete-template' template.id %}'> Delete </a>
+            </td>
+        </tr>
+
+    
+    
+    {% endfor %}
+    </table>
+    
+
+{% endblock body %}
