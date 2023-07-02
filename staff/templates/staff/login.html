@@ -1,0 +1,22 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Login{% endblock title %}
+
+{% block body %}
+    <h1>Login</h1>
+    <br>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="staffusername" class="form-label">Username</label>
+            <input type="text" class="form-control" id="staffusername" name="username" placeholder="Enter username...">
+        </div>
+        <div class="mb-3">
+            <label for="staffpassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="staffpassword" name="password" placeholder="Enter password...">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+
+{% endblock body %}

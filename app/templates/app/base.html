@@ -26,43 +26,34 @@
 
         }
 
-        h1, h2, h3, h4, h5 {
+        /* h1, h2, h3, h4, h5 {
             color: white
-        }
+        } */
 
     </style>
 </head>
 <body>
     <div class=''>
-        <nav class="navbar navbar-expand-lg sticky-top " data-bs-theme="dark">
-            <div class="container-fluid">
-              <a class="navbar-brand" href="{% url "app:index"%}">Generator</a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url "app:manage" %}">Manage Templates</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url "app:upload" %}">Upload Template</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url "app:generate" %}">Generate Documents</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </nav>
+      {% include 'app/navbar.html' %}
+      <br>
+      <div class="container-fluid">
 
-        <div class="mainbody">
-
-        {% block body %}
+        {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>          
+          {% endfor %}
         
-        {% endblock body %}
+        {% endif %}
+      </div>
 
-    </div>
+
+        <div class="px-xl-5">
+          {% block body %}
+          {% endblock body %}
+        </div>
 
     </div>
 </body>

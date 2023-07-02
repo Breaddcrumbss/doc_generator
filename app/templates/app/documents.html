@@ -1,0 +1,39 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Documents{% endblock title %}
+
+
+
+{% block body %}
+
+    {% if not documents %}
+        No files yet
+
+    {% else %}
+        <h1>Download Documents</h1>
+        <br>
+        <div class='row justify-content-md-center'>
+        {% for document in documents %}
+            <div class='col-sm-3'>
+              <div class="card">
+                  <div class="card-header">
+                    {{ document.created_by }}
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">{{ document.name }}</h5>
+                    <p class="card-text">{{ document.timestamp }}</p>
+                    <a href="{% url 'app:doc-download' document.id %}" class="btn btn-primary">Download</a>
+                    <a href="{% url 'app:delete-doc' document.id %}" class="btn btn-danger">Delete</a>
+                  </div>
+              </div>
+            </div>
+        {% endfor %}
+        <br/>
+        <a href="{% url 'app:delete-doc-all'%}" class="btn btn-danger">Delete All</a>
+
+      </div>
+
+    {% endif %}
+
+
+{% endblock body %}

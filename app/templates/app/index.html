@@ -4,6 +4,13 @@
 
 
 {% block body %}
-Welcome
+    {% if user.is_authenticated %}
+        <h2>Welcome, {{ user }}</h2>
+
+    {% else %}
+        <h2>Please register or login</h2>
+    
+    
+    {% endif %}
 
 {% endblock body %}
