@@ -39,9 +39,9 @@ def generate(request):
             print(temp_choices)
             for temp in temp_choices:
                 datafile.seek(0)
-                temp_path = TemplateFile.objects.get(pk=temp).file.path
+                temp_file = TemplateFile.objects.get(pk=temp)
                 print('before generate', datafile)
-                generate_files(temp_path, datafile, request.user)
+                generate_files(temp_file, datafile, request.user)
                 print(temp, 'after generate')
             
             return HttpResponseRedirect(reverse('app:index'))

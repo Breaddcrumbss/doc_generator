@@ -44,7 +44,8 @@ def register_staff(request):
     
         else:
             print(user_form.errors)
-            messages.success(request, ('Registration failed, please try again'))
+            messages.success(request, (user_form.errors))
+            return redirect('staff:registration')
 
         return redirect('staff:login')
 

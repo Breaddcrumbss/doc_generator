@@ -10,7 +10,19 @@
     <div>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
+            <p><strong>{{ form.templates.label }}*</strong></p>   
+            <div class="row pb-5">
+                {% for template in form.templates %}
+                <div class="col-sm-3">
+                    {{template}}
+                </div> 
+                {% endfor %}
+            </div>
+            
+            <div>
+                <p><strong>{{ form.datafile.label }}*</strong></p>
+                {{ form.datafile }}
+            </div>
             <br>
             <input type="submit" class="btn btn-success" value="Generate">
         </form>
