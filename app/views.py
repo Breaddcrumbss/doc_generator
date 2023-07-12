@@ -4,10 +4,11 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .forms import TemplateUploadForm, DocGenerateForm
 from .models import TemplateFile, DataFile, GeneratedFile
-from .utils import generate_files
+from .utils import generate_files, get_vars
 from django.conf import settings
 import os
-
+import io
+import csv
 
 # Create your views here.
 def index(request):
@@ -111,5 +112,25 @@ def delete_template(request, temp_id):
     return HttpResponseRedirect(reverse('app:manage'))
 
 @login_required
-def get_csv(request, id):
-    pass
+def get_csv_all(request):
+    template_list = TemplateFile.objects.all()
+    vars_df = get_vars(template_list)
+    
+    with io.BytesIO() as buf:
+        vars_df.to_csv(buf, index=False, header=False)
+        buf.seek(0)
+        response = HttpResponse(buf, content_type='txt/csv')
+        response['Content-Disposition'] = 'attachment; filename=data_file.csv'
+        return response
+
+@login_required
+def get_csv_byid(request, temp_id):
+    template = [TemplateFile.objects.get(pk=temp_id)]       # List to allow for iteration in getvars function
+    var_df = get_vars(template)
+
+    with io.BytesIO() as buf:
+        var_df.to_csv(buf, index=False, header=False)
+        buf.seek(0)
+        response = HttpResponse(buf, content_type='txt/csv')
+        response['Content-Disposition'] = f'attachment; filename={template[0].name} data_file.csv'
+        return response

@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import io
 import random
+import csv
 
 from pathlib import Path
 from docxtpl import DocxTemplate
@@ -31,3 +32,16 @@ def generate_files(template_path, datafile, user):      #these should be filepat
         file_bytes.seek(0)
         f = GeneratedFile.objects.create(name=f'gen-test{template_path.name}{file_id}', created_by=user)     # to change name to smtg else
         f.file.save(f'gen-test{file_id}.docx', ContentFile(file_bytes.read()))
+
+def get_vars(templates):        # writes a csv file as bytes
+    all_vars = set()
+    for template in templates:
+        file_path = settings.MEDIA_ROOT.joinpath(template.file.path)
+        doc = DocxTemplate(file_path)
+        vars = doc.get_undeclared_template_variables()
+        for var in vars:
+            all_vars.add(var)
+    
+    df = pd.DataFrame(sorted(list(all_vars)))
+
+    return df
