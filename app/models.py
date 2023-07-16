@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class TemplateFile(models.Model):
-    name = models.CharField(max_length=500)
+    name = models.CharField(max_length=500, unique=True)
     file = models.FileField(upload_to='files/templates', null=True)
 
     def __str__(self):

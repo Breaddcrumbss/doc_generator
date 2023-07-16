@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import TemplateUploadForm, DocGenerateForm
 from .models import TemplateFile, DataFile, GeneratedFile
@@ -21,6 +22,10 @@ def upload(request):
         if template.is_valid():
             template.save()
             return HttpResponseRedirect(reverse('app:index'))
+        else:
+            print(template.errors)
+            messages.success(request, (template.errors))
+            return HttpResponseRedirect(reverse('app:upload'))
 
     else:
         form = TemplateUploadForm()
@@ -37,13 +42,11 @@ def generate(request):
         if form.is_valid():
             temp_choices = form.cleaned_data.get('templates')
             datafile = form.cleaned_data.get('datafile')
-            print(temp_choices)
+            name = form.cleaned_data.get('name')
             for temp in temp_choices:
                 datafile.seek(0)
                 temp_file = TemplateFile.objects.get(pk=temp)
-                print('before generate', datafile)
-                generate_files(temp_file, datafile, request.user)
-                print(temp, 'after generate')
+                generate_files(temp_file, datafile, request.user, name)
             
             return HttpResponseRedirect(reverse('app:index'))
         else:

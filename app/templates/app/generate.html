@@ -12,16 +12,26 @@
             {% csrf_token %}
             <p><strong>{{ form.templates.label }}*</strong></p>   
             <div class="row pb-5">
-                {% for template in form.templates %}
-                <div class="col-sm-3">
-                    {{template}}
-                </div> 
-                {% endfor %}
+                {% if form.templates %}
+                    {% for template in form.templates %}
+                    <div class="col-sm-3">
+                        {{template}}
+                    </div> 
+                    {% endfor %}
+                {% else %}
+                    <p>No templates yet!</p>
+
+                {% endif %}
             </div>
             
             <div>
                 <p><strong>{{ form.datafile.label }}*</strong></p>
                 {{ form.datafile }}
+            </div>
+            <br>
+            <div>
+                <p><strong>{{ form.name.label }}*</strong></p>
+                {{ form.name }}
             </div>
             <br>
             <input type="submit" class="btn btn-success" value="Generate">
