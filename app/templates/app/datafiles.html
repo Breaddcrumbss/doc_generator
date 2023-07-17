@@ -2,10 +2,10 @@
 
 {% load crispy_forms_tags %}
 
-{% block title %}Generate{% endblock title %}
+{% block title %}Excel{% endblock title %}
 
 {% block body %}
-    <h1>Create Documents</h1>
+    <h1>Download Excel File</h1>
     <br>
     <div>
         <form method="POST" enctype="multipart/form-data">
@@ -23,18 +23,9 @@
 
                 {% endif %}
             </div>
-            
-            <div>
-                <p><strong>{{ form.datafile.label }}*</strong></p>
-                {{ form.datafile }}
-            </div>
+
             <br>
-            <div>
-                <p><strong>{{ form.name.label }}*</strong></p>
-                {{ form.name }}
-            </div>
-            <br>
-            <input type="submit" class="btn btn-primary" value="Generate">
+            <input type="submit" class="btn btn-success" value="Download Excel">
         </form>
     </div>
 

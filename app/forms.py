@@ -12,6 +12,13 @@ class TemplateUploadForm(forms.ModelForm):
     
     helper = FormHelper()
 
+class DatafileDownload(forms.Form):
+    def __init__(self, templates, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        template_choices = [(template.id, template.name) for template in templates]
+        self.fields['templates'] = forms.MultipleChoiceField(choices=template_choices, widget=forms.CheckboxSelectMultiple(attrs={}), label='Choose Templates', required=True)
+
+
 class DocGenerateForm(forms.Form):
     def __init__(self, templates, *args, **kwargs):
         super().__init__(*args, **kwargs)

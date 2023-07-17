@@ -34,7 +34,7 @@ def generate_files(template_path, datafile, user, doc_name):      #these should 
         f = GeneratedFile.objects.create(name=name, created_by=user)     # to change name to smtg else
         f.file.save(f'{name}.docx', ContentFile(file_bytes.read()))
 
-def get_vars(templates):        # writes a csv file as bytes
+def get_vars(templates: list):        # writes a csv file as bytes
     all_vars = set()
     for template in templates:
         file_path = settings.MEDIA_ROOT.joinpath(template.file.path)

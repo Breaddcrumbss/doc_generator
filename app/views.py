@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import TemplateUploadForm, DocGenerateForm
+from .forms import TemplateUploadForm, DocGenerateForm, DatafileDownload
 from .models import TemplateFile, DataFile, GeneratedFile
 from .utils import generate_files, get_vars
 from django.conf import settings
@@ -102,8 +102,9 @@ def delete_all_documents(request):
 def manage(request):
     template_list = TemplateFile.objects.all()
 
+
     return render(request, 'app/manage.html', {
-        'templates': template_list
+        'templates': template_list,
     })
 
 @login_required
@@ -137,3 +138,39 @@ def get_csv_byid(request, temp_id):
         response = HttpResponse(buf, content_type='txt/csv')
         response['Content-Disposition'] = f'attachment; filename={template[0].name} data_file.csv'
         return response
+    
+@login_required
+def get_csv_multi(request):
+    templates = TemplateFile.objects.all()
+
+    if request.method == "POST":
+        form = DatafileDownload(templates, request.POST)
+        if form.is_valid():
+            templates_selected = form.cleaned_data.get('templates')
+            if templates_selected:
+                template_list = [TemplateFile.objects.get(pk=template_id) for template_id in templates_selected]
+                vars_df = get_vars(template_list)
+                
+                with io.BytesIO() as buf:
+                    vars_df.to_csv(buf, index=False, header=False)
+                    buf.seek(0)
+                    response = HttpResponse(buf, content_type='txt/csv')
+                    response['Content-Disposition'] = 'attachment; filename=data_file.csv'
+                    return response
+        else:
+            messages.success(request, ('Please select at least one template'))
+
+            form = DatafileDownload(templates)
+            return render(request, 'app/datafiles.html', {
+                'form': form
+            })
+                
+
+
+    else:
+        form = DatafileDownload(templates)
+
+        return render(request, 'app/datafiles.html', {
+            'form': form
+        })
+
