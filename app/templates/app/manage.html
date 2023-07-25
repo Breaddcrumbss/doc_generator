@@ -22,7 +22,10 @@
                         <li class="list-group-item">
                             <strong class="mx-5">{{ template.name }}</strong>
                             <a href="{% url 'app:get-csv' template.id %}" class='btn btn-success pull-right'> Data File </a> 
-                            <a href="{% url 'app:delete-template' template.id %}" class='btn btn-danger pull-right'> Delete </a>
+                            {% if superuser %}
+                                <a href="{% url 'app:delete-template' template.id %}" class='btn btn-danger pull-right'> Delete </a>
+                            {% endif %}
+                            
 
                         </li>      
                     {% endfor %}

@@ -22,7 +22,7 @@ class DatafileDownload(forms.Form):
 class DocGenerateForm(forms.Form):
     def __init__(self, templates, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['name'] = forms.CharField(max_length=500)
+        self.fields['name'] = forms.CharField(max_length=500, label="Client's Name")
         template_choices = [(template.id, template.name) for template in templates]
         self.fields['templates'] = forms.MultipleChoiceField(choices=template_choices, widget=forms.CheckboxSelectMultiple(attrs={}) ,label='Choose Templates')
         self.fields['datafile'] = forms.FileField(label='Data File')

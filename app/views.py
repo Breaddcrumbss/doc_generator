@@ -48,7 +48,7 @@ def generate(request):
                 temp_file = TemplateFile.objects.get(pk=temp)
                 generate_files(temp_file, datafile, request.user, name)
             
-            return HttpResponseRedirect(reverse('app:index'))
+            return HttpResponseRedirect(reverse('app:documents'))
         else:
             return HttpResponse('not valid')
     
@@ -101,10 +101,11 @@ def delete_all_documents(request):
 @login_required
 def manage(request):
     template_list = TemplateFile.objects.all()
-
+    superuser = request.user.is_superuser
 
     return render(request, 'app/manage.html', {
         'templates': template_list,
+        'superuser': superuser
     })
 
 @login_required
