@@ -61,7 +61,7 @@ def generate(request):
 
 @login_required
 def documents(request):
-    if request.user.is_superuser:
+    if request.user.is_staff:
         document_list = GeneratedFile.objects.all()
     
     else:
