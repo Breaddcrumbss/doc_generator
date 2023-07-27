@@ -42,11 +42,11 @@ def generate(request):
         if form.is_valid():
             temp_choices = form.cleaned_data.get('templates')
             datafile = form.cleaned_data.get('datafile')
-            name = form.cleaned_data.get('name')
+            # name = form.cleaned_data.get('name')
             for temp in temp_choices:
                 datafile.seek(0)
                 temp_file = TemplateFile.objects.get(pk=temp)
-                generate_files(temp_file, datafile, request.user, name)
+                generate_files(temp_file, datafile, request.user)
             
             return HttpResponseRedirect(reverse('app:documents'))
         else:
@@ -73,11 +73,17 @@ def documents(request):
     })
 
 @login_required
-def doc_download(request, doc_id):
-    doc = GeneratedFile.objects.get(pk=doc_id)
+def doc_download(request, doc_id, template):
+    if template == 1:
+        doc = TemplateFile.objects.get(pk=doc_id)
+    else:
+        doc = GeneratedFile.objects.get(pk=doc_id)
     with open(doc.file.path, 'rb') as fh:
         response = HttpResponse(fh.read(), content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
-        response['Content-Disposition'] = f'attachment; filename={doc.name}.docx'
+        if template == 1:
+            response['Content-Disposition'] = f'attachment; filename={doc.name} template.docx'
+        else:
+            response['Content-Disposition'] = f'attachment; filename={doc.name}.docx'
         return response
 
 @login_required
@@ -100,7 +106,7 @@ def delete_all_documents(request):
 
 @login_required
 def manage(request):
-    template_list = TemplateFile.objects.all()
+    template_list = sorted(TemplateFile.objects.all(), key=lambda x: x.name)
     superuser = request.user.is_superuser
 
     return render(request, 'app/manage.html', {

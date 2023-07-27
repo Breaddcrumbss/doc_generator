@@ -10,12 +10,13 @@ from django.conf import settings
 from .models import TemplateFile, GeneratedFile
 from django.core.files.base import ContentFile
 
-def generate_files(template_path, datafile, user, doc_name):      #these should be filepaths
+def generate_files(template_path, datafile, user):      #these should be filepaths
     file = template_path.file.path
     file_path = settings.MEDIA_ROOT.joinpath(file)
     
     data_df = pd.read_csv(datafile, index_col=0, header=None).transpose()
-    data_df.dropna(axis=0, thresh=1)
+    data_df.dropna(axis=0, how='all', inplace=True)
+
     for index, row in data_df.iterrows():
         # file_id = random.randint(0, 999)
         context = {}
@@ -30,7 +31,7 @@ def generate_files(template_path, datafile, user, doc_name):      #these should 
         template.save(file_bytes)
 
         file_bytes.seek(0)
-        name = f'{doc_name} | {template_path.name}'
+        name = f'{row["Filename"]} | {template_path.name}'
         f = GeneratedFile.objects.create(name=name, created_by=user)     # to change name to smtg else
         f.file.save(f'{name}.docx', ContentFile(file_bytes.read()))
 
@@ -43,6 +44,8 @@ def get_vars(templates: list):        # writes a csv file as bytes
         for var in vars:
             all_vars.add(var)
     
+    newrow = pd.DataFrame(['Filename'])
     df = pd.DataFrame(sorted(list(all_vars)))
+    df = pd.concat([newrow, df])
 
     return df

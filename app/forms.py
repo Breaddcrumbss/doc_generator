@@ -15,15 +15,15 @@ class TemplateUploadForm(forms.ModelForm):
 class DatafileDownload(forms.Form):
     def __init__(self, templates, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        template_choices = [(template.id, template.name) for template in templates]
+        template_choices = [(template.id, template.name) for template in sorted(templates, key=lambda x: x.name)]
         self.fields['templates'] = forms.MultipleChoiceField(choices=template_choices, widget=forms.CheckboxSelectMultiple(attrs={}), label='Choose Templates', required=True)
 
 
 class DocGenerateForm(forms.Form):
     def __init__(self, templates, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['name'] = forms.CharField(max_length=500, label="Client's Name")
-        template_choices = [(template.id, template.name) for template in templates]
+        # self.fields['name'] = forms.CharField(max_length=500, label="Client's Name")
+        template_choices = [(template.id, template.name) for template in sorted(templates, key=lambda x: x.name)]
         self.fields['templates'] = forms.MultipleChoiceField(choices=template_choices, widget=forms.CheckboxSelectMultiple(attrs={}) ,label='Choose Templates')
         self.fields['datafile'] = forms.FileField(label='Data File')
 
