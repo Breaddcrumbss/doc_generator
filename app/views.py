@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import TemplateUploadForm, DocGenerateForm, DatafileDownload
+from .forms import TemplateUploadForm, DocGenerateForm, DatafileDownload, LabelForm
 from .models import TemplateFile, DataFile, GeneratedFile
 from .utils import generate_files, get_vars
 from django.conf import settings
@@ -18,8 +18,14 @@ def index(request):
 @login_required
 def upload(request):
     if request.method == 'POST':
+        labelform = LabelForm(request.POST)
         template = TemplateUploadForm(request.POST, request.FILES)
-        if template.is_valid():
+        if labelform.is_valid():
+            labelform.save()
+            messages.success(request, ('Group Added'))
+            return HttpResponseRedirect(reverse('app:upload'))
+
+        elif template.is_valid():
             template.save()
             return HttpResponseRedirect(reverse('app:index'))
         else:
@@ -29,9 +35,11 @@ def upload(request):
 
     else:
         form = TemplateUploadForm()
+        labelform = LabelForm()
 
         return render(request, 'app/upload.html', {
-            'form': form
+            'form': form,
+            'labelform': labelform
         })
 
 @login_required

@@ -16,6 +16,14 @@
 
 
     </form>
+    <h2>If you don't see the group you want, add it below</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ labelform|crispy }}
+        <input type="submit" class="btn btn-secondary" value="Add Group">
+    </form>
 
     
 
