@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('upload/', views.upload, name='upload'),
     path('generate/', views.generate, name='generate'),
+    path('group_gen/', views.group_generate, name='group-gen'),
     path('manage/', views.manage, name='manage'),
     path('delete_temp/<int:temp_id>/', views.delete_template, name='delete-template'),
     path('get_csv_all/', views.get_csv_all, name='get-csv-all'),
@@ -16,7 +17,7 @@ urlpatterns = [
     path('documents/', views.documents, name='documents'),
     path('download_doc/<int:doc_id>/<int:template>/', views.doc_download, name='doc-download'),
     path('delete_doc/<int:doc_id>/', views.delete_document, name='delete-doc'),
-    path('delete_all_docs/', views.delete_all_documents, name='delete-doc-all')
+    path('delete_all_docs/', views.delete_all_documents, name='delete-doc-all'),
 
 
 ]

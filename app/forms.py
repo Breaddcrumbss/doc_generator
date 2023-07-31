@@ -37,7 +37,13 @@ class DocGenerateForm(forms.Form):
             InlineCheckboxes('templates'),
             Field('datafile')
         )
-        
+
+class GroupGenerateForm(forms.Form):
+    def __init__(self, label, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        label_choices = [(label.id, label.name) for label in sorted(label, key=lambda x: x.name)]
+        self.fields['label'] = forms.MultipleChoiceField(choices=label_choices, widget=forms.CheckboxSelectMultiple() ,label='Choose Templates')
+        self.fields['datafile'] = forms.FileField(label='Data File')
         
 
 class DocDownloadForm(forms.Form):                 # In case batch download is required

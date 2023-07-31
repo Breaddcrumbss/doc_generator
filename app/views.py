@@ -3,8 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import TemplateUploadForm, DocGenerateForm, DatafileDownload, LabelForm
-from .models import TemplateFile, DataFile, GeneratedFile
+from .forms import TemplateUploadForm, DocGenerateForm, DatafileDownload, LabelForm, GroupGenerateForm
+from .models import TemplateFile, DataFile, GeneratedFile, GroupLabel
 from .utils import generate_files, get_vars
 from django.conf import settings
 import os
@@ -66,6 +66,31 @@ def generate(request):
     return render(request, 'app/generate.html', {
         'form': form
     })
+
+@login_required
+def group_generate(request):
+    labels = GroupLabel.objects.all()
+    
+    if request.method == 'POST':
+        form = GroupGenerateForm(labels, request.POST, request.FILES)
+        if form.is_valid():
+            label_choices = form.cleaned_data.get('label')
+            datafile = form.cleaned_data.get('datafile')
+
+            for label in label_choices:
+                templates = TemplateFile.objects.all().filter(label=label)
+                for template in templates:
+                    datafile.seek(0)
+                    generate_files(template, datafile, request.user)
+
+            return HttpResponseRedirect(reverse('app:documents'))
+                    
+
+    else:
+        form = GroupGenerateForm(labels)
+        return render(request, 'app/group_gen.html', {
+            'form': form
+        })
 
 @login_required
 def documents(request):
@@ -188,4 +213,5 @@ def get_csv_multi(request):
         return render(request, 'app/datafiles.html', {
             'form': form
         })
+
 

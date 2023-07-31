@@ -8,16 +8,16 @@
     <h1>Create Documents </h1>
     <h3>This Can Only Be Done After Client's Particulars Have Been Filled in the Excel Data File</h3>
     <br>
-    <a href="{% url 'app:group-gen' %}" class='btn btn-primary'>Group Selection</a>
+    <a href="{% url 'app:generate' %}" class='btn btn-primary'>Individual Selection</a>
     <div>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <p><strong>{{ form.templates.label }}*</strong></p>   
+            <p><strong>{{ form.label.label }}*</strong></p>   
             <div class="row pb-5">
-                {% if form.templates %}
-                    {% for template in form.templates %}
+                {% if form.label %}
+                    {% for label in form.label %}
                     <div class="col-sm-3">
-                        {{template}}
+                        {{label}}
                     </div> 
                     {% endfor %}
                 {% else %}
