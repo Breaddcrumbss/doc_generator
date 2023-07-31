@@ -20,7 +20,7 @@
                     {% for template in templates %}
                         <br>
                         <li class="list-group-item">
-                            <strong class="mx-5">{{ template.name }} | </strong>
+                            <strong class="mx-5">{{ template.name }} | {{ template.timestamp }}</strong>
                             <a href="{% url 'app:get-csv' template.id %}" class='btn btn-success pull-right'> Data File </a>
                             <a href="{% url 'app:doc-download' template.id 1 %}" class="btn btn-primary">Download</a> 
                             {% if superuser %}
