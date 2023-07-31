@@ -1,16 +1,21 @@
 from django import forms
-from .models import TemplateFile, GeneratedFile
+from .models import TemplateFile, GeneratedFile, GroupLabel
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, MultiField, Div, Field
 from crispy_forms.bootstrap import InlineCheckboxes
 
+class LabelForm(forms.ModelForm):
+    class Meta:
+        model = GroupLabel
+        fields = ['name']
 
 class TemplateUploadForm(forms.ModelForm):
     class Meta:
         model = TemplateFile
-        fields = ['name', 'file']
+        fields = ['name', 'file', 'label']
     
-    helper = FormHelper()
+    label = forms.ModelChoiceField(queryset=GroupLabel.objects.all(), empty_label='Select A Group...')
+
 
 class DatafileDownload(forms.Form):
     def __init__(self, templates, *args, **kwargs):
