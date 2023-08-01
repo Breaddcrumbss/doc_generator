@@ -139,7 +139,11 @@ def delete_all_documents(request):
 
 @login_required
 def manage(request):
-    template_list = sorted(TemplateFile.objects.all(), key=lambda x: x.name)
+    label_list = GroupLabel.objects.all()
+    # template_list = sorted(TemplateFile.objects.all(), key=lambda x: x.name)
+
+    template_list = [(label.name, TemplateFile.objects.all().filter(label=label.id)) for label in label_list]
+
     superuser = request.user.is_superuser
 
     return render(request, 'app/manage.html', {

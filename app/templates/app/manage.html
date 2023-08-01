@@ -13,25 +13,26 @@
     <form action="">
         <div class='container-fluid'>
             <div class="card text mb-3">
-                <div class="card-header">
-                    <h3>Templates</h3>
-                </div>
-                <ol class="list-group-numbered">
-                    {% for template in templates %}
-                        <br>
-                        <li class="list-group-item">
-                            <strong class="mx-5">{{ template.name }} | {{ template.timestamp }}</strong>
-                            <a href="{% url 'app:get-csv' template.id %}" class='btn btn-success pull-right'> Data File </a>
-                            <a href="{% url 'app:doc-download' template.id 1 %}" class="btn btn-primary">Download</a> 
-                            {% if superuser %}
-                                <a href="{% url 'app:delete-template' template.id %}" class='btn btn-danger pull-right'> Delete </a>
-                            {% endif %}
-                            
+                {% for template in templates %}
+                    <div class="card-header">
+                        <h3>{{ template.0 }}</h3>
+                    </div>
+                    <ol class="list-group-numbered">
+                            {% for doc in template.1 %}
+                            <br>
+                            <li class="list-group-item">
+                                <strong class="mx-5">{{ doc.name }} | {{ doc.timestamp }}</strong>
+                                <a href="{% url 'app:get-csv' doc.id %}" class='btn btn-success pull-right'> Data File </a>
+                                <a href="{% url 'app:doc-download' doc.id 1 %}" class="btn btn-primary">Download</a> 
+                                {% if superuser %}
+                                    <a href="{% url 'app:delete-template' doc.id %}" class='btn btn-danger pull-right'> Delete </a>
+                                {% endif %}
+                                
 
-                        </li>      
-                    {% endfor %}
-                </ol>
-
+                            </li>      
+                            {% endfor %}
+                    </ol>
+                {% endfor %}
             </div>
         </div>
 
