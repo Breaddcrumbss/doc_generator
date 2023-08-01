@@ -16,6 +16,7 @@ urlpatterns = [
     path('get_csv_multi/', views.get_csv_multi, name='get-csv-multi'),
     path('documents/', views.documents, name='documents'),
     path('download_doc/<int:doc_id>/<int:template>/', views.doc_download, name='doc-download'),
+    path('download_all/', views.doc_download_all, name='download-all'),
     path('delete_doc/<int:doc_id>/', views.delete_document, name='delete-doc'),
     path('delete_all_docs/', views.delete_all_documents, name='delete-doc-all'),
 

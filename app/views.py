@@ -9,7 +9,7 @@ from .utils import generate_files, get_vars
 from django.conf import settings
 import os
 import io
-import csv
+import zipfile
 
 # Create your views here.
 def index(request):
@@ -118,6 +118,23 @@ def doc_download(request, doc_id, template):
         else:
             response['Content-Disposition'] = f'attachment; filename={doc.name}.docx'
         return response
+
+@login_required
+def doc_download_all(request):
+    docs = GeneratedFile.objects.all().filter(created_by=request.user)
+
+    zip_buf = io.BytesIO()
+
+    with zipfile.ZipFile(zip_buf, 'w') as zipf:
+        for doc in docs:
+            filepath = doc.file.path
+            zipf.write(filepath, os.path.basename(filepath))
+
+    zip_buf.seek(0)
+    response = HttpResponse(zip_buf.getvalue(), content_type='application/zip')
+    response['Content-Disposition'] = 'attachment; filename="all_files.zip"' 
+
+    return response
 
 @login_required
 def delete_document(request, doc_id):
